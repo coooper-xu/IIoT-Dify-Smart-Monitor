@@ -1,0 +1,358 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 工厂数据分析流
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.2.8@aae2be0913b8c6f0b80cff58e08d7a8b4c214569b41778413fcaea204561ff16
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/siliconflow:0.0.43@18a2f3c3559d752b178bb4efd6b736dec8dd13c2d963fd6aa5b0a350e24e6826
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1770563321784-source-1770563643666-target
+      source: '1770563321784'
+      sourceHandle: source
+      target: '1770563643666'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1770563643666-source-1770564342627-target
+      source: '1770563643666'
+      sourceHandle: source
+      target: '1770564342627'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1770564342627-source-1770563683701-target
+      source: '1770564342627'
+      sourceHandle: source
+      target: '1770563683701'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1770563683701-source-1770565388965-target
+      source: '1770563683701'
+      sourceHandle: source
+      target: '1770565388965'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: end
+      id: 1770565388965-source-1770565524298-target
+      source: '1770565388965'
+      sourceHandle: source
+      target: '1770565524298'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入设备问题
+        type: start
+        variables:
+        - default: ''
+          hint: ''
+          label: user_query
+          options: []
+          placeholder: ''
+          required: true
+          type: paragraph
+          variable: user_query
+      height: 108
+      id: '1770563321784'
+      position:
+        x: 81
+        y: 282
+      positionAbsolute:
+        x: 81
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        dataset_ids:
+        - dsyedD3a2X5KvtNQMDiOOaef+6XlkgSzgOyFQiC0LuwyDQPMw9Gg1gcuTnTniW59
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: langgenius/openai/openai
+              vector_weight: 1
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1770563321784'
+        - user_query
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 89
+      id: '1770563643666'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1770564342627'
+          - text
+        model:
+          completion_params: {}
+          mode: chat
+          name: Pro/deepseek-ai/DeepSeek-V3.1
+          provider: langgenius/siliconflow/siliconflow
+        prompt_template:
+        - id: b4c32caa-bf80-40b0-9e92-0f9ff2197e20
+          role: system
+          text: '以下是已经整理好的设备运行指标：{{#context#}}
+
+
+            请完成：
+
+            1. 判断是否存在设备异常风险
+
+            2. 判断异常是否具有持续性
+
+            3. 是否建议安排检修或停机
+
+            4. 给出原因（基于数据，不要猜测）
+
+
+            请用清晰条列输出。
+
+            '
+        selected: false
+        title: 异常分析与决策建议
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1770563683701'
+      position:
+        x: 988.885598444101
+        y: 282
+      positionAbsolute:
+        x: 988.885598444101
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1770563643666'
+          - result
+        model:
+          completion_params: {}
+          mode: chat
+          name: Pro/deepseek-ai/DeepSeek-V3.1
+          provider: langgenius/siliconflow/siliconflow
+        prompt_template:
+        - id: 99a63966-892c-4e27-bacb-d9c4f94b2947
+          role: system
+          text: "你将获得工厂设备运行的原始记录数据。\n{{#context#}}\n请完成以下工作：\n1. 按时间顺序整理数据\n2. 计算：\n\
+            \   - 每条记录的良品率\n   - 是否存在温度异常（>80℃）\n   - 是否存在振动异常（>2.0）\n3. 标记可能存在异常的时间点\n\
+            \n请用 JSON 输出，字段包括：\n- time\n- yield_rate\n- temperature_status（normal\
+            \ / high）\n- vibration_status（normal / high）\n"
+        selected: false
+        title: 指标计算与数据整理
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1770564342627'
+      position:
+        x: 687.3920063828846
+        y: 282
+      positionAbsolute:
+        x: 687.3920063828846
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1770563683701'
+          - text
+        model:
+          completion_params: {}
+          mode: chat
+          name: Pro/deepseek-ai/DeepSeek-V3.1
+          provider: langgenius/siliconflow/siliconflow
+        prompt_template:
+        - id: d3d703d2-6f96-4fe3-8d60-764c7847ad4f
+          role: system
+          text: '请将以下分析结果整理为一段【工厂管理层日报摘要】：
+
+
+            异常分析结果：
+
+            {{#context#}}
+
+            要求：
+
+            - 不使用技术术语
+
+            - 不展示具体数值计算过程
+
+            - 重点说明：是否正常运行 / 是否有风险 / 是否需要行动
+
+            - 150–200 字
+
+            '
+        selected: false
+        title: FINAL_REPORT
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1770565388965'
+      position:
+        x: 1293.0472282875846
+        y: 282
+      positionAbsolute:
+        x: 1293.0472282875846
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        outputs:
+        - value_selector:
+          - '1770565388965'
+          - text
+          value_type: string
+          variable: text
+        selected: false
+        title: 输出
+        type: end
+      height: 87
+      id: '1770565524298'
+      position:
+        x: 1599.386835495233
+        y: 288.50123705113214
+      positionAbsolute:
+        x: 1599.386835495233
+        y: 288.50123705113214
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    viewport:
+      x: 74.5455666495069
+      y: 226.57327457922088
+      zoom: 0.5314038194189238
+  rag_pipeline_variables: []
